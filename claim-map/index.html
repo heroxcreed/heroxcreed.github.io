@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claim → PR diff-line map — heroxcreed</title>
+<style>
+:root{--fg:#1a1a1a;--muted:#5c5c5c;--line:#d8d8d8;--bg:#fbfbfb;--accent:#1a1a1a}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{max-width:760px;margin:0 auto;padding:48px 20px 40px}
+h1{font-size:1.6rem;margin:0 0 8px}h2{font-size:1.25rem;margin:2em 0 .6em}h3{font-size:1.05rem;margin:1.6em 0 .5em}
+p,li{margin-bottom:.6em}a{color:var(--accent)}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:.88rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:#f2f2f2}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:#f2f2f2;padding:1px 5px;border-radius:3px}
+pre{background:#f2f2f2;padding:14px;border-radius:6px;overflow-x:auto}pre code{background:none;padding:0}
+blockquote{border-left:3px solid var(--line);margin:1em 0;padding:.2em 0 .2em 1em;color:var(--muted)}
+hr{border:none;border-top:1px solid var(--line);margin:2em 0}
+.meta{color:var(--muted);font-size:.9rem;margin-bottom:2em}
+nav.top{margin-bottom:2em;font-size:.9rem;color:var(--muted)}nav.top a{margin-right:14px}
+footer{border-top:1px solid var(--line);margin-top:3em;padding-top:1.2em;font-size:.88rem;color:var(--muted)}
+@media(max-width:480px){main{padding:36px 16px 32px}h1{font-size:1.35rem}}
+</style>
+</head>
+<body>
+<main>
+<nav class="top"><a href="/">Home</a><a href="/case-study/">Case study</a><a href="/free-teardown/">Free teardown</a><a href="mailto:heroxcreed275@gmail.com">Contact</a></nav>
+<h1>Claim → PR diff-line map</h1>
+<p class="meta">Companion to the tt-metal case study · 42 verified diff anchors</p>
+<h1 id="claim-pr-link-map-verified">Claim → PR link map (verified)</h1>
+<p>Companion to <code>CASE-STUDY-tt-metal-moreh-numerics-heroxcreed.md</code>. Every link below was checked before the case study was written:
+the <code>#diff-&lt;sha256(path)&gt;[LR]&lt;line&gt;</code> fragment is the anchor GitHub itself renders for that file in the PR's <em>Files changed</em> view
+(confirmed present in the server-rendered HTML of the page, and the rendered line text was matched against the claim), and every page/commit URL returns HTTP 200.</p>
+<p><code>L</code> = the pre-fix (left) line as numbered in that PR's diff; <code>R</code> = the post-fix (right) line. File names are shortened for readability only — the URL is exact.</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>kind</th>
+<th>PR</th>
+<th>claim / code point</th>
+<th>diff link (anchor verified)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a1</td>
+<td>Claim</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200">#56200</a></td>
+<td>The 2d reader's <code>#if defined(WEIGHT)</code> block sits outside the target-validity branch, so an ignored/OOR target still computes <code>noc_id = target_val / TILE_WIDTH</code> (unsigned division of a negative int32).</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200/files#diff-67a0ee6bd3b5ee29f32d07be4ac72cf8f9c928069075d7eb2497ecfbf1c62e66L84">#56200 · reader_..._step2_2d.cpp · L84</a></td>
+</tr>
+<tr>
+<td>a2</td>
+<td>Claim</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200">#56200</a></td>
+<td>That division is the wild page id source: <code>noc_id = target_val / TILE_WIDTH</code> with <code>target_val = -1</code> or <code>-100</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200/files#diff-67a0ee6bd3b5ee29f32d07be4ac72cf8f9c928069075d7eb2497ecfbf1c62e66L85">#56200 · reader_..._step2_2d.cpp · L85</a></td>
+</tr>
+<tr>
+<td>a3</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200">#56200</a></td>
+<td><code>if (target_val != ignore_index &amp;&amp; (0 &lt;= target_val &amp;&amp; target_val &lt; static_cast&lt;int32_t&gt;(C)))</code> now gates the weight read.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200/files#diff-67a0ee6bd3b5ee29f32d07be4ac72cf8f9c928069075d7eb2497ecfbf1c62e66R88">#56200 · reader_..._step2_2d.cpp · R88</a></td>
+</tr>
+<tr>
+<td>a4</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200">#56200</a></td>
+<td>The <code>WEIGHT</code> guard is now re-entered inside the valid-target branch (block moved, not deleted).</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200/files#diff-67a0ee6bd3b5ee29f32d07be4ac72cf8f9c928069075d7eb2497ecfbf1c62e66R82">#56200 · reader_..._step2_2d.cpp · R82</a></td>
+</tr>
+<tr>
+<td>a5</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200">#56200</a></td>
+<td><code>tmp_weight_l1_ptr[tilized_idx] = fp32_dest_acc_cast(0.0f);</code> gives the ignored target a deterministic zero instead of uninitialised memory.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200/files#diff-67a0ee6bd3b5ee29f32d07be4ac72cf8f9c928069075d7eb2497ecfbf1c62e66R83">#56200 · reader_..._step2_2d.cpp · R83</a></td>
+</tr>
+<tr>
+<td>a6</td>
+<td>Claim</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200">#56200</a></td>
+<td>3d reader pre-fix: <code>idx_max = std::min(w + FACE_WIDTH, W)</code> mixes an absolute W coordinate with a face-local count.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200/files#diff-62a1bcc353608da121e9463350a6fce1b93391f7dacfd6924667e79d34a77677L78">#56200 · reader_..._step2_3d.cpp · L78</a></td>
+</tr>
+<tr>
+<td>a7</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200">#56200</a></td>
+<td>3d reader post-fix: <code>idx_max = std::min(FACE_WIDTH, W - w)</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200/files#diff-62a1bcc353608da121e9463350a6fce1b93391f7dacfd6924667e79d34a77677R78">#56200 · reader_..._step2_3d.cpp · R78</a></td>
+</tr>
+<tr>
+<td>a8</td>
+<td>Evidence</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200">#56200</a></td>
+<td>Regression test <code>test_moreh_nll_loss_step2_3d_multi_face</code> (10 parametrizations, incl. W=33 and W=2048).</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200/files#diff-a1bf5c21c0bfe39f8db34594f99a233ca47cf71b43db6fe4b6e211523fb00003R440">#56200 · test_moreh_nll_loss.py · R440</a></td>
+</tr>
+<tr>
+<td>a9</td>
+<td>Evidence</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200">#56200</a></td>
+<td>Regression test <code>test_moreh_nll_loss_negative_ignore_index_2d</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200/files#diff-a1bf5c21c0bfe39f8db34594f99a233ca47cf71b43db6fe4b6e211523fb00003R398">#56200 · test_moreh_nll_loss.py · R398</a></td>
+</tr>
+<tr>
+<td>b1</td>
+<td>Claim</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56202">#56202</a></td>
+<td>Pre-fix: <code>mean_rstd_g_idx = c_idx % num_groups;</code> where <code>c_idx</code> is the core-local channel index.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56202/files#diff-9a51aa5bb97f6e2143ab0ce99434e6ad571a82853c2086ee5683638fc785cbc5L129">#56202 · reader_...gamma_beta_grad.cpp · L129</a></td>
+</tr>
+<tr>
+<td>b2</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56202">#56202</a></td>
+<td><code>const auto c_global = outer_idx + tile_offset / HtWt;</code> — same global-channel arithmetic the sibling writer of this op uses.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56202/files#diff-9a51aa5bb97f6e2143ab0ce99434e6ad571a82853c2086ee5683638fc785cbc5R130">#56202 · reader_...gamma_beta_grad.cpp · R130</a></td>
+</tr>
+<tr>
+<td>b3</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56202">#56202</a></td>
+<td><code>mean_rstd_g_idx = c_global / (num_channels / num_groups);</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56202/files#diff-9a51aa5bb97f6e2143ab0ce99434e6ad571a82853c2086ee5683638fc785cbc5R132">#56202 · reader_...gamma_beta_grad.cpp · R132</a></td>
+</tr>
+<tr>
+<td>b4</td>
+<td>Evidence</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56202">#56202</a></td>
+<td>Regression test <code>test_moreh_group_norm_backward_gamma_grad_group_index</code> (8 parametrizations; 8 failed with the reader reverted to main, 8 passed with the PR kernel).</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56202/files#diff-6c856a4de357d73ec6354cb15324fbb9d71e8d67eb22dc8fb339f10140aca819R687">#56202 · test_moreh_group_norm.py · R687</a></td>
+</tr>
+<tr>
+<td>c1</td>
+<td>Claim</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56203">#56203</a></td>
+<td>Pre-fix: <code>num_bytes_per_tile = TILE_WIDTH * element_size</code> — a fixed full 32-element chunk per work unit.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56203/files#diff-826322eb535fda8699948fa1ed4d93db0d433bfbeb732d560b7ced6dc30652beL25">#56203 · writer_moreh_arange_rm.cpp · L25</a></td>
+</tr>
+<tr>
+<td>c2</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56203">#56203</a></td>
+<td>Post-fix the kernel reads the clamped byte count as runtime argument 6: <code>last_chunk_bytes = get_arg_val&lt;uint32_t&gt;(6);</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56203/files#diff-826322eb535fda8699948fa1ed4d93db0d433bfbeb732d560b7ced6dc30652beR25">#56203 · writer_moreh_arange_rm.cpp · R25</a></td>
+</tr>
+<tr>
+<td>c3</td>
+<td>Claim</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56203">#56203</a></td>
+<td>Pre-fix the unconditional NoC write used that full <code>num_bytes_per_tile</code> for the last chunk too (64 B past the end for L=80 fp32).</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56203/files#diff-826322eb535fda8699948fa1ed4d93db0d433bfbeb732d560b7ced6dc30652beL84">#56203 · writer_moreh_arange_rm.cpp · L84</a></td>
+</tr>
+<tr>
+<td>c4</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56203">#56203</a></td>
+<td>The program factory now computes <code>last_chunk_width = ((W - 1) % tt::constants::TILE_WIDTH) + 1;</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56203/files#diff-434979601d883991545d6d48df5d466740ddf3b1601581fcb9902ceda87ece18R81">#56203 · moreh_arange_program_factory.cpp · R81</a></td>
+</tr>
+<tr>
+<td>c5</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56203">#56203</a></td>
+<td>Per-core gating: only the core holding the last tile gets the partial width (<code>writes_last_chunk = (tile_offset + num_tiles_per_core) == Wt</code>).</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56203/files#diff-434979601d883991545d6d48df5d466740ddf3b1601581fcb9902ceda87ece18R96">#56203 · moreh_arange_program_factory.cpp · R96</a></td>
+</tr>
+<tr>
+<td>d1</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334">#56334</a></td>
+<td>Entry point of the fix: <code>if (std::isinf(p)) {</code> in the backward program factory.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334/files#diff-6349c45b9dc5694c04f364e89cf9d108f5444caf1b31eed300dec4f331baf76fR259">#56334 · moreh_norm_backward_program_factory.cpp · R259</a></td>
+</tr>
+<tr>
+<td>d2</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334">#56334</a></td>
+<td>The factory emits a <code>NORM_INF</code> compute define instead of feeding ±inf into the floored-exponent path.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334/files#diff-6349c45b9dc5694c04f364e89cf9d108f5444caf1b31eed300dec4f331baf76fR260">#56334 · moreh_norm_backward_program_factory.cpp · R260</a></td>
+</tr>
+<tr>
+<td>d3</td>
+<td>Claim/Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334">#56334</a></td>
+<td>Kernel side: the new <code>#ifdef NORM_INF</code> branch replaces the finite-p power ladder for these orders.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334/files#diff-06de9866b9d83d24933515f472c596491994c577a64b003a1338ec5f783b3399R52">#56334 · moreh_norm_backward_kernel.cpp · R52</a></td>
+</tr>
+<tr>
+<td>d4</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334">#56334</a></td>
+<td>Final stage of the exact sub-gradient: <code>// step 5: dx = (sign(x) * dy) * mask</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334/files#diff-06de9866b9d83d24933515f472c596491994c577a64b003a1338ec5f783b3399R136">#56334 · moreh_norm_backward_kernel.cpp · R136</a></td>
+</tr>
+<tr>
+<td>d5</td>
+<td>Evidence</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334">#56334</a></td>
+<td>Regression test <code>test_moreh_norm_backward_p_inf</code> (±inf × dims {N,C,H,W} on <code>[5,8,78,77]</code>).</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334/files#diff-3561c5400ec6416f56411009e43c5a407c09b67c91d6baacede63e945f40d1b8R548">#56334 · test_moreh_norm.py · R548</a></td>
+</tr>
+<tr>
+<td>e1</td>
+<td>Claim</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56074">#56074</a></td>
+<td>Pre-fix (h_large, SOFTMIN branch of the last tile): <code>rexp_tile_and_mask_tile_to_cb(...)</code> runs on the raw input, with no max subtraction.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56074/files#diff-256fa3575c9284171317cdba45959997f4516723baf11b3dd6152f14faf6a234L78">#56074 · moreh_softmax_h_large.cpp · L78</a></td>
+</tr>
+<tr>
+<td>e2</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56074">#56074</a></td>
+<td>h_large now subtracts the broadcast max first: <code>sub_tiles_bcast_rows_to_cb(...)</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56074/files#diff-256fa3575c9284171317cdba45959997f4516723baf11b3dd6152f14faf6a234R78">#56074 · moreh_softmax_h_large.cpp · R78</a></td>
+</tr>
+<tr>
+<td>e3</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56074">#56074</a></td>
+<td>w_large (cols variant): <code>sub_tiles_bcast_cols_to_cb(...)</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56074/files#diff-437a5d0e0023865d7a7c77f5996be369a981f7a05696702d479ec1c9e94590eaR81">#56074 · moreh_softmax_w_large.cpp · R81</a></td>
+</tr>
+<tr>
+<td>f1</td>
+<td>Claim</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56111">#56111</a></td>
+<td>Pre-fix: <code>auto shape = param_in.logical_shape();</code> while the work volume comes from <code>physical_volume()</code> (padded).</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56111/files#diff-6857e32b8345db9cf942b2bb9379531a703f6d7adb1b85f0a5672252e6058fc6L46">#56111 · moreh_sgd_program_factory.cpp · L46</a></td>
+</tr>
+<tr>
+<td>f2</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56111">#56111</a></td>
+<td>Post-fix: <code>auto shape = param_in.padded_shape();</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56111/files#diff-6857e32b8345db9cf942b2bb9379531a703f6d7adb1b85f0a5672252e6058fc6R46">#56111 · moreh_sgd_program_factory.cpp · R46</a></td>
+</tr>
+<tr>
+<td>g1</td>
+<td>Claim</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56197">#56197</a></td>
+<td>Pre-fix site 1: <code>power_tile(dst0, step)</code> — integer <code>step</code> passed where IEEE-754 float bits are expected.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56197/files#diff-2c800a8ccd5cf911e5d46fdc0b8f2dd74e61055bd025e2648806f79c2e741dd4L150">#56197 · moreh_adam.cpp · L150</a></td>
+</tr>
+<tr>
+<td>g2</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56197">#56197</a></td>
+<td>Site 1 fixed with the integer-exponent idiom: <code>power_iterative_tile(dst0, step)</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56197/files#diff-2c800a8ccd5cf911e5d46fdc0b8f2dd74e61055bd025e2648806f79c2e741dd4R150">#56197 · moreh_adam.cpp · R150</a></td>
+</tr>
+<tr>
+<td>g3</td>
+<td>Claim</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56197">#56197</a></td>
+<td>Pre-fix site 2 (second bias correction): same <code>power_tile(dst0, step)</code> misuse.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56197/files#diff-2c800a8ccd5cf911e5d46fdc0b8f2dd74e61055bd025e2648806f79c2e741dd4L259">#56197 · moreh_adam.cpp · L259</a></td>
+</tr>
+<tr>
+<td>g4</td>
+<td>Claim</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56197">#56197</a></td>
+<td>Second defect: <code>pack_tile_with_dt(dst0, dfb_tmp1_obj);</code> issued <em>before</em> <code>tile_regs_commit()/tile_regs_wait()</code> in the sqrt block.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56197/files#diff-2c800a8ccd5cf911e5d46fdc0b8f2dd74e61055bd025e2648806f79c2e741dd4L223">#56197 · moreh_adam.cpp · L223</a></td>
+</tr>
+<tr>
+<td>g5</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56197">#56197</a></td>
+<td>The pack now happens after the handshake (<code>pack_tile_with_dt(...)</code> on the post-wait line).</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56197/files#diff-2c800a8ccd5cf911e5d46fdc0b8f2dd74e61055bd025e2648806f79c2e741dd4R226">#56197 · moreh_adam.cpp · R226</a></td>
+</tr>
+<tr>
+<td>h1</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>New helper in <code>moreh_common.hpp</code>: <code>ALWI void negative_tile_to_cb(...)</code> — used to build <code>-max(-x)</code> (the FPU has no bf16 MIN reduce).</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386/files#diff-793c500855593ac6cc67a6a28d55a8c41a80a1b1b13d236317a9bdbe413c5c93R715">#56386 · moreh_common.hpp · R715</a></td>
+</tr>
+<tr>
+<td>h2</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>Masked padding lanes are written as <code>+inf</code> <em>before</em> the negate (<code>mask_posinf_tile</code>), so they become <code>-inf</code> and cannot win the <code>max(-x)</code> reduce.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386/files#diff-793c500855593ac6cc67a6a28d55a8c41a80a1b1b13d236317a9bdbe413c5c93R770">#56386 · moreh_common.hpp · R770</a></td>
+</tr>
+<tr>
+<td>h3</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>The c_large cross-tile fold switches to <code>binary_min_tile(dst0, dst1, dst0);</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386/files#diff-3fd6ddacac851b354b47a6ece5326f13fb026178c4834daf83d99c804ef0259aR62">#56386 · moreh_softmax_c_large.cpp · R62</a></td>
+</tr>
+<tr>
+<td>h4</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>h kernel: tiles are negated into the temp buffer (<code>negative_tile_to_cb</code>) before the MAX reduce.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386/files#diff-e8af8a82aaff592ec329286959ea1cd6f7f8b8ff0046912189b10a104a1ca276R90">#56386 · moreh_softmax_h.cpp · R90</a></td>
+</tr>
+<tr>
+<td>h5</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>h_large: the post-reduce callback negates the accumulator back to give min(x).</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386/files#diff-256fa3575c9284171317cdba45959997f4516723baf11b3dd6152f14faf6a234R100">#56386 · moreh_softmax_h_large.cpp · R100</a></td>
+</tr>
+<tr>
+<td>h6</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>w kernel: same negate-before-reduce pattern for the row-major variant.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386/files#diff-3acd0d0b15de8896071b6e800c043af29da3714aa60bbfbfcd5b4422e9b112a6R104">#56386 · moreh_softmax_w.cpp · R104</a></td>
+</tr>
+<tr>
+<td>h7</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>Kernel branch structure added by the fix (<code>#ifdef SOFTMAX</code> … <code>#else</code> softmin path) in the h kernel.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386/files#diff-e8af8a82aaff592ec329286959ea1cd6f7f8b8ff0046912189b10a104a1ca276R52">#56386 · moreh_softmax_h.cpp · R52</a></td>
+</tr>
+<tr>
+<td>h8</td>
+<td>Fix</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>Same branch structure in the c_large kernel.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386/files#diff-3fd6ddacac851b354b47a6ece5326f13fb026178c4834daf83d99c804ef0259aR57">#56386 · moreh_softmax_c_large.cpp · R57</a></td>
+</tr>
+<tr>
+<td>h9</td>
+<td>Evidence</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>Regression test <code>test_softmin_special_value_in_row</code> (6 shape/dim combos × {+inf, −inf}).</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386/files#diff-4a2c534ed925131d046b6c5488c2060a12cb0aa678a716696e4cfd05abfb69b6R545">#56386 · test_moreh_softmin.py · R545</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="supporting-links-unmodified-code-pinned-to-a-specific-commit">Supporting links (unmodified code, pinned to a specific commit)</h2>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>PR</th>
+<th>kind</th>
+<th>what it shows</th>
+<th>link (HTTP 200, line content checked)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>blob4d</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200">#56200</a></td>
+<td>Reference</td>
+<td>In-tree 4d reader (the working invariant this fix mirrors): weight lookup nested inside the validity check, with an else-zero.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/blob/0b89c89626317f05ef761ac2ed5dfa12e087fcde/ttnn/cpp/ttnn/operations/moreh/moreh_nll_loss/moreh_nll_loss_step2/device/kernels/reader_moreh_nll_loss_step2_4d.cpp#L63-L74">blob</a></td>
+</tr>
+<tr>
+<td>blobgnw</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56202">#56202</a></td>
+<td>Reference</td>
+<td>Sibling writer of the same op, which already computes the global channel as <code>outer_idx + (tile_offset / HtWt)</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/blob/2d592d364e32bd0fab5f3c047d69c320f1a0bc28/ttnn/cpp/ttnn/operations/moreh/moreh_group_norm_backward/device/gamma_beta_grad/kernels/dataflow/writer_moreh_group_norm_backward_gamma_beta_grad.cpp#L52">blob</a></td>
+</tr>
+<tr>
+<td>blobnbf</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334">#56334</a></td>
+<td>Root cause</td>
+<td>Unmodified pre-existing code that produces the ±inf defect: <code>get_floored_p_and_decimal_and_p_is_negative</code> floors <code>p</code> and casts to <code>uint32_t</code>.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/blob/e0edc25ea8ed01cd458dfe1cb8cdbf26898c764a/ttnn/cpp/ttnn/operations/moreh/moreh_norm_backward/device/moreh_norm_backward_program_factory.cpp#L37-L44">blob</a></td>
+</tr>
+<tr>
+<td>softminemit</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>Root cause</td>
+<td>The forward program factory emits the SOFTMIN define (<code>compute_defines["SOFTMIN"] = "1";</code>) — one of five such sites; no kernel consumed it pre-fix.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/blob/58864baf49b73488f00b236253f944ad89e7ec9f/ttnn/cpp/ttnn/operations/moreh/moreh_softmax/device/softmax_h_large/softmax_h_large.cpp#L168">blob</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="maintainer-feedback-links">Maintainer feedback links</h2>
+<table>
+<thead>
+<tr>
+<th>PR</th>
+<th>who</th>
+<th>what</th>
+<th>permalink</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>56200</td>
+<td>bbradelTT</td>
+<td>Approval, with the request to add a test that fails without the change</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200#pullrequestreview-5198257878">review</a></td>
+</tr>
+<tr>
+<td>56200</td>
+<td>bbradelTT</td>
+<td>Rebase request (“I'll kick off the CI flow again”)</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200#issuecomment-5682174971">comment</a></td>
+</tr>
+<tr>
+<td>56200</td>
+<td>bbradelTT</td>
+<td>Confirms the eltwise / deepseek CI failures are pre-existing</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56200#issuecomment-5684034330">comment</a></td>
+</tr>
+<tr>
+<td>56202</td>
+<td>bbradelTT</td>
+<td>“Change looks good” + add a regression test + drop the closing keyword</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56202#pullrequestreview-5179722851">review</a></td>
+</tr>
+<tr>
+<td>56202</td>
+<td>bbradelTT</td>
+<td>Approval after the follow-ups</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56202#pullrequestreview-5225549587">review</a></td>
+</tr>
+<tr>
+<td>56203</td>
+<td>bbradelTT</td>
+<td>Rework request: the width must come from the program factory as a runtime argument</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56203#pullrequestreview-5179618693">review</a></td>
+</tr>
+<tr>
+<td>56203</td>
+<td>bbradelTT</td>
+<td>Approval after the rework</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56203#pullrequestreview-5225609245">review</a></td>
+</tr>
+<tr>
+<td>56334</td>
+<td>bbradelTT</td>
+<td>Approval</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334#pullrequestreview-5225406360">review</a></td>
+</tr>
+<tr>
+<td>56334</td>
+<td>bbradelTT</td>
+<td>Rebase request</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56334#issuecomment-5700909171">comment</a></td>
+</tr>
+</tbody>
+</table>
+<p>PR labels (<code>pr-priority:p1</code> / <code>pr-risk:high</code> / <code>pr-complexity:*</code>) were applied by the repository's triage account (<code>minaliuTT</code>), not by the author; this is verifiable per PR with
+<code>gh api repos/tenstorrent/tt-metal/issues/&lt;n&gt;/timeline --jq '.[]|select(.event=="labeled")|"\(.label.name)@\(.actor.login)"'</code>.</p>
+<p>No line in this map points at a hunk that does not exist: 42 diff anchors + 4 pinned-commit blobs, all checked (anchor id present in the server-rendered PR page, and the rendered line text matched against the claim). Claims whose evidence lives only in a PR description or comment (measurement tables, red/green counts) are attributed in the case study to that comment rather than to a diff line.</p>
+<p>Note on the three <code>power_tile</code> rows (g1–g3): GitHub renders those lines with intra-line highlighting, so the raw HTML shows the changed fragment wrapped in its own span. The anchors are correct (<code>L150</code>/<code>R150</code>, <code>L259</code>/<code>R259</code>), the row text confirms the unit change at the same line, and the pack-order rows (g4/g5) render in full.</p>
+<footer>heroxcreed — independent AI system reliability reviewer.<br>Contact: <a href="mailto:heroxcreed275@gmail.com">heroxcreed275@gmail.com</a> (email only, no calls, no video).</footer>
+</main>
+</body>
+</html>
