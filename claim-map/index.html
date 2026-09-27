@@ -27,8 +27,9 @@ footer{border-top:1px solid var(--line);margin-top:3em;padding-top:1.2em;font-si
 <main>
 <nav class="top"><a href="/">Home</a><a href="/case-study/">Case study</a><a href="/free-teardown/">Free teardown</a><a href="mailto:heroxcreed275@gmail.com">Contact</a></nav>
 <h1>Claim → PR diff-line map</h1>
-<p class="meta">Companion to the tt-metal case study · 42 verified diff anchors</p>
+<p class="meta">Companion to the tt-metal case study · 42 verified diff anchors + 9 pinned lines</p>
 <h1 id="claim-pr-link-map-verified">Claim → PR link map (verified)</h1>
+<p><strong>Snapshot as of 2026-09-27.</strong> PR statuses in the case study and in this map describe that date; GitHub is the source of truth for current state.</p>
 <p>Companion to <code>CASE-STUDY-tt-metal-moreh-numerics-heroxcreed.md</code>. Every link below was checked before the case study was written:
 the <code>#diff-&lt;sha256(path)&gt;[LR]&lt;line&gt;</code> fragment is the anchor GitHub itself renders for that file in the PR's <em>Files changed</em> view
 (confirmed present in the server-rendered HTML of the page, and the rendered line text was matched against the claim), and every page/commit URL returns HTTP 200.</p>
@@ -341,6 +342,7 @@ the <code>#diff-&lt;sha256(path)&gt;[LR]&lt;line&gt;</code> fragment is the anch
 </tbody>
 </table>
 <h2 id="supporting-links-unmodified-code-pinned-to-a-specific-commit">Supporting links (unmodified code, pinned to a specific commit)</h2>
+<p>All rows pinned to commit <code>58864baf</code>: the line content of each was fetched and matched to the claim, and every URL returns HTTP 200.</p>
 <table>
 <thead>
 <tr>
@@ -374,11 +376,39 @@ the <code>#diff-&lt;sha256(path)&gt;[LR]&lt;line&gt;</code> fragment is the anch
 <td><a href="https://github.com/tenstorrent/tt-metal/blob/e0edc25ea8ed01cd458dfe1cb8cdbf26898c764a/ttnn/cpp/ttnn/operations/moreh/moreh_norm_backward/device/moreh_norm_backward_program_factory.cpp#L37-L44">blob</a></td>
 </tr>
 <tr>
-<td>softminemit</td>
+<td>site 1</td>
 <td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
 <td>Root cause</td>
-<td>The forward program factory emits the SOFTMIN define (<code>compute_defines["SOFTMIN"] = "1";</code>) — one of five such sites; no kernel consumed it pre-fix.</td>
+<td>Forward program factory emits the SOFTMIN compute define: <code>compute_defines["SOFTMIN"] = "1";</code> (softmax_c_large.cpp:149). Five such sites; no kernel consumed the define pre-fix.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/blob/58864baf49b73488f00b236253f944ad89e7ec9f/ttnn/cpp/ttnn/operations/moreh/moreh_softmax/device/softmax_c_large/softmax_c_large.cpp#L149">blob</a></td>
+</tr>
+<tr>
+<td>site 2</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>Root cause</td>
+<td>Forward program factory emits the SOFTMIN compute define: <code>compute_defines["SOFTMIN"] = "1";</code> (softmax_h_large.cpp:168). Five such sites; no kernel consumed the define pre-fix.</td>
 <td><a href="https://github.com/tenstorrent/tt-metal/blob/58864baf49b73488f00b236253f944ad89e7ec9f/ttnn/cpp/ttnn/operations/moreh/moreh_softmax/device/softmax_h_large/softmax_h_large.cpp#L168">blob</a></td>
+</tr>
+<tr>
+<td>site 3</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>Root cause</td>
+<td>Forward program factory emits the SOFTMIN compute define: <code>compute_defines["SOFTMIN"] = "1";</code> (softmax_h_small.cpp:167). Five such sites; no kernel consumed the define pre-fix.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/blob/58864baf49b73488f00b236253f944ad89e7ec9f/ttnn/cpp/ttnn/operations/moreh/moreh_softmax/device/softmax_h_small/softmax_h_small.cpp#L167">blob</a></td>
+</tr>
+<tr>
+<td>site 4</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>Root cause</td>
+<td>Forward program factory emits the SOFTMIN compute define: <code>compute_defines["SOFTMIN"] = "1";</code> (softmax_w_large.cpp:178). Five such sites; no kernel consumed the define pre-fix.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/blob/58864baf49b73488f00b236253f944ad89e7ec9f/ttnn/cpp/ttnn/operations/moreh/moreh_softmax/device/softmax_w_large/softmax_w_large.cpp#L178">blob</a></td>
+</tr>
+<tr>
+<td>site 5</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/pull/56386">#56386</a></td>
+<td>Root cause</td>
+<td>Forward program factory emits the SOFTMIN compute define: <code>compute_defines["SOFTMIN"] = "1";</code> (softmax_w_small.cpp:173). Five such sites; no kernel consumed the define pre-fix.</td>
+<td><a href="https://github.com/tenstorrent/tt-metal/blob/58864baf49b73488f00b236253f944ad89e7ec9f/ttnn/cpp/ttnn/operations/moreh/moreh_softmax/device/softmax_w_small/softmax_w_small.cpp#L173">blob</a></td>
 </tr>
 </tbody>
 </table>
@@ -451,7 +481,7 @@ the <code>#diff-&lt;sha256(path)&gt;[LR]&lt;line&gt;</code> fragment is the anch
 </table>
 <p>PR labels (<code>pr-priority:p1</code> / <code>pr-risk:high</code> / <code>pr-complexity:*</code>) were applied by the repository's triage account (<code>minaliuTT</code>), not by the author; this is verifiable per PR with
 <code>gh api repos/tenstorrent/tt-metal/issues/&lt;n&gt;/timeline --jq '.[]|select(.event=="labeled")|"\(.label.name)@\(.actor.login)"'</code>.</p>
-<p>No line in this map points at a hunk that does not exist: 42 diff anchors + 4 pinned-commit blobs, all checked (anchor id present in the server-rendered PR page, and the rendered line text matched against the claim). Claims whose evidence lives only in a PR description or comment (measurement tables, red/green counts) are attributed in the case study to that comment rather than to a diff line.</p>
+<p>No line in this map points at a hunk that does not exist: 42 diff anchors + 9 pinned-commit lines (4 unmodified-code references + 5 SOFTMIN-define emit sites), all checked (anchor id present in the server-rendered PR page, and the rendered line text matched against the claim). Claims whose evidence lives only in a PR description or comment (measurement tables, red/green counts) are attributed in the case study to that comment rather than to a diff line.</p>
 <p>Note on the three <code>power_tile</code> rows (g1–g3): GitHub renders those lines with intra-line highlighting, so the raw HTML shows the changed fragment wrapped in its own span. The anchors are correct (<code>L150</code>/<code>R150</code>, <code>L259</code>/<code>R259</code>), the row text confirms the unit change at the same line, and the pack-order rows (g4/g5) render in full.</p>
 <footer>heroxcreed — independent AI system reliability reviewer.<br>Contact: <a href="mailto:heroxcreed275@gmail.com">heroxcreed275@gmail.com</a> (email only, no calls, no video).</footer>
 </main>
