@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="heroxcreed">
+<meta property="og:title" content="Claim → PR diff-line map">
+<meta property="og:description" content="Every claim in the case study mapped to the exact PR diff line it rests on.">
+<meta property="og:url" content="https://heroxcreed.github.io/claim-map/">
 <title>Claim → PR diff-line map — heroxcreed</title>
 <style>
 :root{--fg:#1a1a1a;--muted:#5c5c5c;--line:#d8d8d8;--bg:#fbfbfb;--accent:#1a1a1a}
@@ -25,7 +30,7 @@ footer{border-top:1px solid var(--line);margin-top:3em;padding-top:1.2em;font-si
 </head>
 <body>
 <main>
-<nav class="top"><a href="/">Home</a><a href="/case-study/">Case study</a><a href="/free-teardown/">Free teardown</a><a href="mailto:heroxcreed275@gmail.com">Contact</a></nav>
+<nav class="top"><a href="/">Home</a><a href="/case-study/">Case study</a><a href="/claim-map/">Claim map</a><a href="/free-teardown/">Free teardown</a><a href="/log/">Log</a><a href="mailto:heroxcreed275@gmail.com">Contact</a></nav>
 <h1>Claim → PR diff-line map</h1>
 <p class="meta">Companion to the tt-metal case study · 42 verified diff anchors + 9 pinned lines</p>
 <h1 id="claim-pr-link-map-verified">Claim → PR link map (verified)</h1>
@@ -483,7 +488,7 @@ the <code>#diff-&lt;sha256(path)&gt;[LR]&lt;line&gt;</code> fragment is the anch
 <code>gh api repos/tenstorrent/tt-metal/issues/&lt;n&gt;/timeline --jq '.[]|select(.event=="labeled")|"\(.label.name)@\(.actor.login)"'</code>.</p>
 <p>No line in this map points at a hunk that does not exist: 42 diff anchors + 9 pinned-commit lines (4 unmodified-code references + 5 SOFTMIN-define emit sites), all checked (anchor id present in the server-rendered PR page, and the rendered line text matched against the claim). Claims whose evidence lives only in a PR description or comment (measurement tables, red/green counts) are attributed in the case study to that comment rather than to a diff line.</p>
 <p>Note on the three <code>power_tile</code> rows (g1–g3): GitHub renders those lines with intra-line highlighting, so the raw HTML shows the changed fragment wrapped in its own span. The anchors are correct (<code>L150</code>/<code>R150</code>, <code>L259</code>/<code>R259</code>), the row text confirms the unit change at the same line, and the pack-order rows (g4/g5) render in full.</p>
-<footer>heroxcreed — independent AI system reliability reviewer.<br>Contact: <a href="mailto:heroxcreed275@gmail.com">heroxcreed275@gmail.com</a> (email only, no calls, no video).</footer>
+<footer>heroxcreed — independent AI system reliability reviewer.<br>Contact: <a href="mailto:heroxcreed275@gmail.com">heroxcreed275@gmail.com</a> (email only, no calls, no video).<br><a href="/log/">Log</a> · Last updated: 2026-09-27</footer>
 </main>
 </body>
 </html>
